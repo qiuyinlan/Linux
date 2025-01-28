@@ -13,7 +13,18 @@
 
 #define MAX_NAME_LEN 256
 
-// 定义文件信息结构体
+/*bool isSymlink(const char*path)
+{
+    struct stat st;
+    return lstat(path,&st)==0&&S_ISLNK(st.st_mode);
+}
+
+bool isSpecialDirectory(const char *path) 
+{
+    return strstr(path, "/run/user/") != NULL && strstr(path, "/gvfs") != NULL;
+}*/
+
+//定义文件信息结构体
 struct fileinfo
 {
     char name[256];
@@ -26,15 +37,14 @@ struct fileinfo
     nlink_t nlink;
     blkcnt_t blocks;
 };
-
-// 错误函数
+//错误函数
 void sys_err(const char*str)
 {
     perror(str);
     exit(1);
 }
 
-// 名称对比函数
+//名称对比函数
 int compare_name(const void*a,const void*b)
 {
     struct fileinfo*A=(struct fileinfo*)a;
@@ -42,22 +52,21 @@ int compare_name(const void*a,const void*b)
 
     return strcmp(A->name,B->name);
 }
-
-// 时间对比函数
+//时间对比函数
 int compare_time(const void*a,const void*b)
 {
     struct fileinfo*A=(struct fileinfo*)a;
     struct fileinfo*B=(struct fileinfo*)b;
 
     if(A->mtime>B->mtime)
-        return -1;
+    return -1;
     else if(A->mtime<B->mtime)
-        return 1;
+    return 1;
     else 
-        return 0;
+    return 0;
 }
 
-// -t 反转函数
+//-t反转函数
 void reserve(struct fileinfo*arr,int count)
 {
     for(int i=0;i<count/2;i++)
@@ -66,9 +75,10 @@ void reserve(struct fileinfo*arr,int count)
         arr[i]=arr[count-1-i];
         arr[count-1-i]=temp;
     }
+    
 }
 
-// 打印权限函数
+//打印权限函数
 void printPermissions(mode_t mode)
 {
     printf((mode&S_IRUSR)?"r":"-");
@@ -80,9 +90,10 @@ void printPermissions(mode_t mode)
     printf((mode&S_IROTH)?"r":"-");
     printf((mode&S_IWOTH)?"w":"-");
     printf((mode&S_IXOTH)?"x":"-");
+
 }
 
-// 打印文件类型
+//打印文件类型
 void printType(mode_t mode)
 {
     if(S_ISDIR(mode))
@@ -115,67 +126,69 @@ void printType(mode_t mode)
     }
 }
 
-// 打印输出函数，询问 -l -i -s
-void print(struct fileinfo *fp, int l, int i, int s, int maxLinkLen, int maxSizeLen, int maxBlocksLen)
+//打印输出函数，询问-l -i -s
+void print(struct fileinfo*fp,int l,int i,int s,int maxLinkLen,int maxSizeLen,int maxBlocksLen)
 {
-    if (l)
+    if(l)
     {
-        if (i)
+        if(i)
         {
-            printf("%ld ", fp->inode);
+            printf("%ld ",fp->inode);
         }
-        if (s)
+        if(s)
         {
-            printf("%*ld ", maxBlocksLen, fp->blocks);
+            printf("%*ld ",maxBlocksLen,fp->blocks);
         }
         printType(fp->mode);
         printPermissions(fp->mode);
-        printf(" %*ld", maxLinkLen, fp->nlink);
+        printf(" %*ld",maxLinkLen,fp->nlink);
 
-        struct passwd *pwd = getpwuid(fp->uid);
-        printf(" %s", pwd->pw_name);
-        struct group *grp = getgrgid(fp->gid);
-        printf(" %s", grp->gr_name);
-
-        printf(" %*ld", maxSizeLen, fp->size);
-
-        struct tm *time;
-        time = localtime(&(fp->mtime));
+        struct passwd*pwd=getpwuid(fp->uid);
+        printf(" %s",pwd->pw_name);
+        struct group*grp=getgrgid(fp->gid);
+        printf(" %s",grp->gr_name);
+        
+        printf(" %*ld",maxSizeLen,fp->size);
+        
+        struct tm*time;
+        time=localtime(&(fp->mtime));
         char timeBuff[30];
-        strftime(timeBuff, sizeof(timeBuff), "%m月 %d %H:%M", time);
-        printf(" %s", timeBuff);
+        strftime(timeBuff,sizeof(timeBuff),"%m月 %d %H:%M",time);
+        printf(" %s",timeBuff);
+        
+        printf(" %s",fp->name);
 
-        printf(" %s", fp->name);
         printf("\n");
     }
     else
     {
-        // 当不使用 -l 选项时，直接打印文件名，不换行
-        if (i)
+        if(i)
         {
-            printf("%ld ", fp->inode);
+            printf("%ld ",fp->inode);
         }
-        if (s)
+        if(s)
         {
-            printf("%*ld ", maxBlocksLen, fp->blocks);
+            printf("%*ld ",maxBlocksLen,fp->blocks);
         }
-        printf("%s     ", fp->name);
+        printf("%s       ",fp->name);
+       
     }
-}
 
-// 主要函数
+}
+//主要函数
 void list_directory(const char*dirpath,int a,int l,int R,int t,int r,int i,int s)
 {
+    //printf("--------------------------------------------------\n");
     if(dirpath==NULL)
-        return;
+    return;
 
     if(R)
     {
         printf("\n");
         if(dirpath[0]=='/'&&dirpath[1]=='/')
-            printf("%s:\n",dirpath+1);
+        printf("%s:\n",dirpath+1);
         else 
-            printf("%s:\n",dirpath);
+        printf("%s:\n",dirpath);
     }
 
     DIR*dp=opendir(dirpath);
@@ -185,7 +198,8 @@ void list_directory(const char*dirpath,int a,int l,int R,int t,int r,int i,int s
         return;
     }
 
-    // 分配初始内存
+
+    //分配初始内存
     int capasity=1024;
     struct fileinfo*fileinfos=(struct fileinfo*)malloc(sizeof(struct fileinfo)*capasity);
     if(fileinfos==NULL)
@@ -193,12 +207,13 @@ void list_directory(const char*dirpath,int a,int l,int R,int t,int r,int i,int s
         perror("malloc error");
     }
 
+
     int count=0;
     struct stat filestat;
     struct dirent*dirent;
     while((dirent=readdir(dp))!=NULL)
     {   
-        // 动态扩容
+        //动态扩容
         if(count>=capasity)
         {
             capasity*=2;
@@ -209,7 +224,7 @@ void list_directory(const char*dirpath,int a,int l,int R,int t,int r,int i,int s
             perror("realloc error");
         }
 
-        // 实现 -a，过滤隐藏文件
+        //实现-a，过滤隐藏文件
         if(!a&&dirent->d_name[0]=='.')
         {
             continue;
@@ -220,7 +235,7 @@ void list_directory(const char*dirpath,int a,int l,int R,int t,int r,int i,int s
         if(lstat(filePath,&filestat)==-1)
         {
             perror("stat error");
-            continue;
+            //continue;
         }
         
         strcpy(fileinfos[count].name,dirent->d_name);
@@ -235,38 +250,38 @@ void list_directory(const char*dirpath,int a,int l,int R,int t,int r,int i,int s
         count++;   
     }
 
-    // 按照名排序
+    //按照名排序
     if(!t)
     {
         qsort(fileinfos,count,sizeof(struct fileinfo),compare_name);
     }
 
-    // 实现 -t 参数，按照时间排序
+    //实现-t参数，按照时间排序
     if(t)
     {
         qsort(fileinfos,count,sizeof(struct fileinfo),compare_time);
     }
 
-    // 实现 -r 参数，反转顺序
+    //实现-r参数，反转顺序
     if(r)
     {
         reserve(fileinfos,count);
     }
 
-    // 找出最大的长度以对齐
+    //找出最大的长度以对齐
     int maxLink=0,maxLinkLen=0;
     int maxSize=0,maxSizeLen=0;
     int maxBlocks=0,maxBlocksLen=0;
     for(int j=0;j<count;j++)
     {
         if(fileinfos[j].nlink>maxLink)
-            maxLink=fileinfos[j].nlink;
+        maxLink=fileinfos[j].nlink;
 
         if(fileinfos[j].size>maxSize)
-            maxSize=fileinfos[j].size;
+        maxSize=fileinfos[j].size;
 
         if(fileinfos[j].blocks>maxBlocks)
-            maxBlocks=fileinfos[j].blocks;
+        maxBlocks=fileinfos[j].blocks;
     }
     while(maxLink!=0)
     {
@@ -284,43 +299,41 @@ void list_directory(const char*dirpath,int a,int l,int R,int t,int r,int i,int s
         maxBlocksLen++;
     }
 
-    // 核心打印
-    for (int j = 0; j < count; j++)
+    //*********核心打印
+    for(int j=0;j<count;j++)
     {
-        print(&fileinfos[j], l, i, s, maxLinkLen, maxSizeLen, maxBlocksLen);
+        print(&fileinfos[j],l,i,s,maxLinkLen,maxSizeLen,maxBlocksLen);
     }
 
-    // 当不使用 -l 选项时，打印换行符
-    if (!l) {
-        printf("\n");
-    }
-
-    // 在 fileinfos 中提取目录名
+   // printf("是目录的是：\n");
+    //在fileinfos中提取目录名
     int dirCount=0;    
     for(int j=0;j<count;j++)
     {    
         if(S_ISDIR(fileinfos[j].mode)&&strcmp(fileinfos[j].name,".")!=0&&strcmp(fileinfos[j].name,"..")!=0)
-            dirCount++;// 计算目录数量
+        dirCount++;//计算目录数量
     }
     char **dirNames=(char**)malloc(dirCount*sizeof(char*));
     for(int j=0,k=0;j<count;j++)
     {
         if(S_ISDIR(fileinfos[j].mode)&&strcmp(fileinfos[j].name,".")!=0&&strcmp(fileinfos[j].name,"..")!=0)
         {
+            //printf("%s\n",fileinfos[j].name);
             dirNames[k]=(char*)malloc(sizeof(char)*MAX_NAME_LEN);
             strcpy(dirNames[k++],fileinfos[j].name);
         }
     }
     free(fileinfos);
 
-    // 实现 -R，递归
+    //实现-R，递归
     if(R)
     {
         for(int j=0;j<dirCount;j++)
         { 
+            //printf("%s\n",dirNames[i]);
             char newdirPath[1024];
             snprintf(newdirPath,sizeof(newdirPath),"%s/%s",dirpath,dirNames[j]);
-            list_directory(newdirPath,a,l,R,t,r,i,s);
+           list_directory(newdirPath,a,l,R,t,r,i,s);
         }
     }
 
@@ -332,60 +345,66 @@ int main(int argc,char*argv[])
 {
     int opt;
     int a=0,l=0,R=0,t=0,r=0,i=0,s=0;
-    // 解析命令行参数
-    // 获取当前工作目录
+    //解析命令行参数
+    //获取当前工作目录
     char *path=".";
 
     int pathCount=0;
 
     while(optind<argc)
     {
+        //printf("--------------------------------------------\n");
+        //printf("%d\n",optind);
+
         while((opt=getopt(argc,argv,"alRtris"))!=-1)
         {
             switch(opt)
             {
                 case 'a':
-                    a=1;
-                    break;
+                a=1;
+                break;
 
                 case 'l':
-                    l=1;
-                    break;
+                l=1;
+                break;
 
                 case 'R':
-                    R=1;
-                    break;
+                R=1;
+                break;
 
                 case 't':
-                    t=1;
-                    break;
+                t=1;
+                break;
 
                 case 'r':
-                    r=1;
-                    break;
+                r=1;
+                break;
 
                 case 'i':
-                    i=1;
-                    break;
+                i=1;
+                break;
 
                 case 's':
-                    s=1;
-                    break;
+                s=1;
+                break;
             }
         }
         if(pathCount>0)
-            optind++;
+        optind++;
 
+        //printf("%d\n",optind);
         if(optind<argc)
         {
             path=argv[optind];
             optind++;
             if(R==0)
-                printf("%s:\n",path);
+            printf("%s:\n",path);
             list_directory(path,a,l,R,t,r,i,s);
             pathCount++;
-        }
-    }
+       }
+       //printf("%d\n",optind);
+      // printf("%d\n",argc);
+   }
 
     if(pathCount==0)
     {
