@@ -1,3 +1,116 @@
+
+# 下载
+
+在 Linux Ubuntu 系统中，`.AppImage` 文件是一种便携式的应用程序格式，可以直接运行，不需要安装。下面是你需要做的步骤：
+
+---
+
+### 1. **赋予可执行权限**
+
+下载的 `.AppImage` 文件默认没有可执行权限，需要手动设置。
+
+打开终端，定位到文件所在目录（假设文件在 `下载` 文件夹中）：
+
+```bash
+cd ~/下载
+chmod +x cursor-0.45.4x86_64.AppImage
+```
+
+---
+
+### 2. **运行 AppImage 文件**
+
+直接运行文件：
+
+```bash
+./cursor-0.45.4x86_64.AppImage
+```
+
+这会启动应用程序。如果运行成功，说明软件可以正常使用。
+
+---
+
+### 3. **创建快捷方式（可选）**
+
+如果你希望方便启动，可以创建桌面快捷方式。
+
+#### （1）移动到全局位置（可选）
+
+将 `.AppImage` 移动到一个更合适的位置，比如 `/opt` 文件夹：
+
+```bash
+sudo mv cursor-0.45.4x86_64.AppImage /opt/cursor.AppImage
+```
+
+#### （2）创建桌面快捷方式
+
+创建快捷方式文件：
+
+```bash
+nano ~/.local/share/applications/cursor.desktop
+```
+
+然后输入以下内容：
+
+```ini
+[Desktop Entry]
+Name=Cursor
+Exec=/opt/cursor.AppImage
+Type=Application
+Icon=utilities-terminal
+Categories=Utility;
+```
+
+保存并退出（Ctrl+O, 回车，然后 Ctrl+X）。
+
+更新快捷方式：
+
+```bash
+update-desktop-database ~/.local/share/applications
+```
+
+现在，你可以在应用菜单中搜索到 `Cursor`，直接点击启动。
+
+---
+
+### 遇到问题？
+
+如果运行 `.AppImage` 文件时出现问题，请检查：
+
+- 是否已赋予可执行权限。
+- 是否有缺少的依赖库（一般 `.AppImage` 自带依赖，但可能有例外）。
+
+如果有任何问题，随时问我！
+
+
+
+# 沙盒
+这个问题是由于 `.AppImage` 中的 Chrome 沙盒环境（`chrome-sandbox`）未正确配置导致的。`.AppImage` 文件可能需要特定的权限或设置才能正常工作。
+
+以下是解决方法：
+
+---
+
+### 1. **尝试禁用沙盒**
+
+可以通过禁用沙盒来解决此问题。运行以下命令启动 `.AppImage` 文件：
+
+bash
+
+复制编辑
+
+`./cursor-0.45.4x86_64.AppImage --no-sandbox`
+
+如果这个方法有效，软件将正常运行。
+
+
+
+
+
+
+
+
+# 目录
 打印当前位置  pwd
 上一级  cd ..
 注意,带有空格记得在空格前面反斜杠,或者引号引起来

@@ -8,7 +8,6 @@
 #include <grp.h>
 #include <time.h>
 #include <stdbool.h>
-#include <errno.h>
 
 #define MAX_NAME_LEN 256
 
@@ -113,17 +112,7 @@ void list_directory(const char *dir_path, bool show_hidden, bool long_format, bo
 
     DIR *dir = opendir(dir_path);
     if (!dir) {
-        switch (errno) {
-            case ENOENT:
-                printf("ls: 无法访问 '%s': 没有那个文件或目录\n", dir_path);
-                break;
-            case EACCES:
-                printf("ls: 无法访问 '%s': 权限不够\n", dir_path);
-                break;
-            default:
-                perror("opendir error");
-                break;
-        }
+        perror("opendir error");
         return;
     }
 
