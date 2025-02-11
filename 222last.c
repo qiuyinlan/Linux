@@ -10,230 +10,364 @@
 #include <stdbool.h>
 #include <errno.h>
 
-#define MAX_NAME_LEN 256
+#define MAX_PATH_LENGTH 256
+#define INITIAL_CAPACITY 16
+#define COLOR_GREEN "\033[1;32m"
+#define COLOR_BLUE "\033[1;34m"
+#define COLOR_RESET "\033[0m"
 
-// 定义文件信息结构体
+typedef struct DisplayOptions {
+    bool show_hidden;
+    bool long_format;
+    bool recursive;
+    bool sort_by_time;
+    bool reverse_sort;
+    bool show_inode;
+    bool show_blocks;
+    int link_width;
+    int size_width;
+    int block_width;
+} DisplayOptions;
+
+typedef struct FileMetadata {    
+    char path[MAX_PATH_LENGTH];  
+    ino_t inode_number;         
+    off_t file_size;           
+    time_t modified_time;      
+    mode_t file_mode;         
+    uid_t owner_id;          
+    gid_t group_id;         
+    nlink_t link_count;    
+    blkcnt_t block_count; 
+} FileMetadata;
+
 typedef struct {
-    char name[MAX_NAME_LEN];
-    ino_t inode;
-    off_t size;
-    time_t mtime;
-    mode_t mode;
-    uid_t uid;
-    gid_t gid;
-    nlink_t nlink;
-    blkcnt_t blocks;
-} FileInfo;
+    FileMetadata *files;
+    int count;
+    int capacity;
+} FileList;
 
-// 错误处理函数
+// 处理错误信息并退出程序
+// message: 错误信息字符串
 void handle_error(const char *message) {
     perror(message);
     exit(EXIT_FAILURE);
 }
 
-// 比较文件名
-int compare_name(const void *a, const void *b) {
-    const FileInfo *fileA = (const FileInfo *)a;
-    const FileInfo *fileB = (const FileInfo *)b;
-    return strcmp(fileA->name, fileB->name);
+// 安全的内存分配函数，如果分配失败会自动处理错误
+
+void *safe_malloc(size_t size) {
+    void *ptr = malloc(size);
+    if (!ptr) handle_error("Memory allocation failed");
+    return ptr;
 }
 
-// 比较文件修改时间
-int compare_time(const void *a, const void *b) {
-    const FileInfo *fileA = (const FileInfo *)a;
-    const FileInfo *fileB = (const FileInfo *)b;
-    return (fileA->mtime > fileB->mtime) ? -1 : (fileA->mtime < fileB->mtime) ? 1 : 0;
+// 创建一个新的文件列表
+
+FileList *create_file_list(int initial_capacity) {
+    FileList *list = safe_malloc(sizeof(FileList));
+    list->files = safe_malloc(sizeof(FileMetadata) * initial_capacity);
+    list->count = 0;
+    list->capacity = initial_capacity;
+    return list;
 }
 
-// 反转数组
-void reverse_array(FileInfo *array, int count) {
+// 释放文件列表占用的内存
+// list: 要释放的文件列表
+void free_file_list(FileList *list) {
+    free(list->files);
+    free(list);
+}
+
+// 向文件列表中添加一个新的文件
+
+void add_to_file_list(FileList *list, FileMetadata *file) {
+    if (list->count >= list->capacity) {
+        list->capacity *= 2;
+        list->files = realloc(list->files, sizeof(FileMetadata) * list->capacity);
+        if (!list->files) handle_error("Memory reallocation failed");
+    }
+    list->files[list->count++] = *file;
+}
+
+// 反转文件列表中的元素顺序
+
+void reverse_array(FileMetadata *array, int count) {
     for (int i = 0; i < count / 2; i++) {
-        FileInfo temp = array[i];
+        FileMetadata temp = array[i];
         array[i] = array[count - 1 - i];
         array[count - 1 - i] = temp;
     }
 }
 
-// 打印文件权限
-void print_permissions(mode_t mode) {
-    printf((mode & S_IRUSR) ? "r" : "-");
-    printf((mode & S_IWUSR) ? "w" : "-");
-    printf((mode & S_IXUSR) ? "x" : "-");
-    printf((mode & S_IRGRP) ? "r" : "-");
-    printf((mode & S_IWGRP) ? "w" : "-");
-    printf((mode & S_IXGRP) ? "x" : "-");
-    printf((mode & S_IROTH) ? "r" : "-");
-    printf((mode & S_IWOTH) ? "w" : "-");
-    printf((mode & S_IXOTH) ? "x" : "-");
+// 比较两个文件的路径名（用于排序）
+
+int compare_by_path(const void *a, const void *b) {    
+    return strcmp(((FileMetadata *)a)->path, ((FileMetadata *)b)->path);
 }
 
-// 打印文件类型
-void print_file_type(mode_t mode) {
-    if (S_ISDIR(mode)) printf("d");
-    else if (S_ISLNK(mode)) printf("l");
-    else if (S_ISREG(mode)) printf("-");
-    else if (S_ISCHR(mode)) printf("c");
-    else if (S_ISBLK(mode)) printf("b");
-    else if (S_ISFIFO(mode)) printf("p");
-    else printf("?");
+// 根据修改时间比较两个文件（用于排序）
+
+int compare_by_time(const void *a, const void *b) {    
+    const FileMetadata *file_a = (const FileMetadata *)a;
+    const FileMetadata *file_b = (const FileMetadata *)b;
+    if (file_a->modified_time != file_b->modified_time) {
+        return (file_a->modified_time < file_b->modified_time) - (file_a->modified_time > file_b->modified_time);
+    }
+    return strcmp(file_a->path, file_b->path);
 }
 
-// 打印文件信息
-void print_file_info(const FileInfo *file, bool show_inode, bool show_blocks, bool long_format, int max_link_len, int max_size_len, int max_blocks_len) {
-    if (long_format) {
-        if (show_inode) printf("%ld ", file->inode);
-        if (show_blocks) printf("%*ld ", max_blocks_len, file->blocks);
-        print_file_type(file->mode);
-        print_permissions(file->mode);
-        printf(" %*ld", max_link_len, file->nlink);
+// 格式化文件权限信息
+// permissions: 输出的权限字符串
+void format_permissions(mode_t mode, char *permissions) {
+    const char *rwx = "rwxrwxrwx";
+    for(int i = 0; i < 9; i++) {
+        permissions[i] = (mode & (1 << (8-i))) ? rwx[i] : '-';
+    }
+    permissions[9] = '\0';
+}
 
-        struct passwd *pwd = getpwuid(file->uid);
-        struct group *grp = getgrgid(file->gid);
-        printf(" %s %s", pwd->pw_name, grp->gr_name);
+// 获取文件的显示颜色
+// mode: 文件模式
+// 返回值: 颜色控制字符串
+const char *get_file_color(mode_t mode) {
+    if (S_ISDIR(mode)) {
+        return COLOR_BLUE;  // 目录显示蓝色
+    }
+    return "";  // 普通文件不使用颜色
+}
 
-        printf(" %*ld", max_size_len, file->size);
+// 显示单个文件的信息
 
-        char time_buff[30];
-        strftime(time_buff, sizeof(time_buff), "%m月 %d %H:%M", localtime(&file->mtime));
-        printf(" %s %s\n", time_buff, file->name);
+void display_file_entry(const FileMetadata *file, const DisplayOptions *options) {
+    if (options->long_format) {
+        if (options->show_inode) printf("%8lu ", file->inode_number);
+        if (options->show_blocks) printf("%4lu ", file->block_count / 2);
+
+        char permissions[11];
+        format_permissions(file->file_mode, permissions);
+        printf("%c%s", S_ISDIR(file->file_mode) ? 'd' : '-', permissions);
+
+        struct passwd *pwd = getpwuid(file->owner_id);
+        struct group *grp = getgrgid(file->group_id);
+
+        printf(" %*lu %s %s %*ld ", 
+               options->link_width, file->link_count,
+               pwd ? pwd->pw_name : "unknown",
+               grp ? grp->gr_name : "unknown",
+               options->size_width, file->file_size);
+
+        char time_str[32];
+        strftime(time_str, sizeof(time_str), "%b %d %H:%M", 
+                localtime(&file->modified_time));
+        printf("%s %s%s%s\n", time_str, 
+               get_file_color(file->file_mode), file->path, 
+               S_ISDIR(file->file_mode) ? COLOR_RESET : "");  // 只有在显示蓝色时才重置
     } else {
-        if (show_inode) printf("%ld ", file->inode);
-        if (show_blocks) printf("%*ld ", max_blocks_len, file->blocks);
-        printf("%s     ", file->name);
+        if (options->show_inode) printf("%8lu ", file->inode_number);
+        if (options->show_blocks) printf("%4lu ", file->block_count / 2);
+        printf("%s%s%s  ", 
+               get_file_color(file->file_mode), file->path,
+               S_ISDIR(file->file_mode) ? COLOR_RESET : "");  // 只有在显示蓝色时才重置
     }
 }
 
-// 列出目录内容
-void list_directory(const char *dir_path, bool show_hidden, bool long_format, bool recursive, bool sort_by_time, bool reverse_order, bool show_inode, bool show_blocks) {
-    if (!dir_path) return;
+// 更新显示选项中的宽度信息
 
-    if (recursive) {
-        printf("\n%s:\n", dir_path[0] == '/' && dir_path[1] == '/' ? dir_path + 1 : dir_path);
+void update_display_options(FileList *list, DisplayOptions *options) {
+    // 初始化变量
+    long unsigned int max_size = 0;
+    long unsigned int current_size = 0;
+    nlink_t max_link = 0;
+    nlink_t current_link = 0;
+    int i = 0;
+    
+    // 遍历所有文件找最大值
+    while (i < list->count) {
+        // 获取当前文件的链接数
+        current_link = list->files[i].link_count;
+        
+        // 比较链接数
+        if (current_link > max_link) {
+            max_link = current_link;
+        }
+        
+        // 获取当前文件的大小
+        current_size = list->files[i].file_size;
+        
+        // 比较文件大小
+        if (current_size > max_size) {
+            max_size = current_size;
+        }
+        
+        // 移动到下一个文件
+        i = i + 1;
     }
+
+    // 计算显示宽度
+    char temp_buffer[32];
+    
+    // 计算链接数的显示宽度
+    sprintf(temp_buffer, "%lu", (unsigned long)max_link);
+    options->link_width = strlen(temp_buffer);
+    
+    // 计算文件大小的显示宽度
+    sprintf(temp_buffer, "%lu", max_size);
+    options->size_width = strlen(temp_buffer);
+    
+    // 确保最小显示宽度
+    if (options->link_width < 2) {
+        options->link_width = 2;
+    }
+    
+    if (options->size_width < 2) {
+        options->size_width = 2;
+    }
+}
+
+// 列出指定目录中的文件
+
+void list_directory(const char *dir_path, const DisplayOptions *options) {
+    if (!dir_path) return;
 
     DIR *dir = opendir(dir_path);
     if (!dir) {
-        switch (errno) {
-            case ENOENT:
-                printf("ls: 无法访问 '%s': 没有那个文件或目录\n", dir_path);
-                break;
-            case EACCES:
-                printf("ls: 无法访问 '%s': 权限不够\n", dir_path);
-                break;
-            default:
-                perror("opendir error");
-                break;
-        }
+        fprintf(stderr, "Cannot open directory '%s': %s\n", dir_path, strerror(errno));
         return;
     }
 
-    int capacity = 1024;
-    FileInfo *files = malloc(sizeof(FileInfo) * capacity);
-    if (!files) handle_error("malloc error");
-
-    int file_count = 0;
+    FileList *list = create_file_list(INITIAL_CAPACITY);
     struct dirent *entry;
+
     while ((entry = readdir(dir)) != NULL) {
-        if (file_count >= capacity) {
-            capacity *= 2;
-            files = realloc(files, sizeof(FileInfo) * capacity);
-            if (!files) handle_error("realloc error");
-        }
+        if (!options->show_hidden && entry->d_name[0] == '.') continue;
 
-        if (!show_hidden && entry->d_name[0] == '.') continue;
-
-        char file_path[1024];
-        snprintf(file_path, sizeof(file_path), "%s/%s", dir_path, entry->d_name);
-
-        struct stat file_stat;
-        if (lstat(file_path, &file_stat) == -1) {
-            perror("stat error");
+        char full_path[MAX_PATH_LENGTH];
+        size_t dir_len = strlen(dir_path);
+        size_t name_len = strlen(entry->d_name);
+        
+        // 检查路径长度是否超出限制
+        if (dir_len + name_len + 2 > MAX_PATH_LENGTH) {
+            fprintf(stderr, "Path too long: %s/%s\n", dir_path, entry->d_name);
             continue;
         }
+        
+        // 安全地构建完整路径
+        strcpy(full_path, dir_path);
+        if (full_path[dir_len - 1] != '/') {
+            strcat(full_path, "/");
+        }
+        strcat(full_path, entry->d_name);
 
-        strcpy(files[file_count].name, entry->d_name);
-        files[file_count].inode = file_stat.st_ino;
-        files[file_count].size = file_stat.st_size;
-        files[file_count].mtime = file_stat.st_mtime;
-        files[file_count].mode = file_stat.st_mode;
-        files[file_count].uid = file_stat.st_uid;
-        files[file_count].gid = file_stat.st_gid;
-        files[file_count].nlink = file_stat.st_nlink;
-        files[file_count].blocks = file_stat.st_blocks;
-        file_count++;
+        struct stat file_stat;
+        if (lstat(full_path, &file_stat) == -1) continue;
+
+        FileMetadata metadata = {0};
+        strncpy(metadata.path, entry->d_name, MAX_PATH_LENGTH - 1);
+        metadata.path[MAX_PATH_LENGTH - 1] = '\0';  // 确保字符串结束
+        metadata.inode_number = file_stat.st_ino;
+        metadata.file_size = file_stat.st_size;
+        metadata.modified_time = file_stat.st_mtime;
+        metadata.file_mode = file_stat.st_mode;
+        metadata.owner_id = file_stat.st_uid;
+        metadata.group_id = file_stat.st_gid;
+        metadata.link_count = file_stat.st_nlink;
+        metadata.block_count = file_stat.st_blocks;
+
+        add_to_file_list(list, &metadata);
     }
 
-    qsort(files, file_count, sizeof(FileInfo), sort_by_time ? compare_time : compare_name);
-    if (reverse_order) reverse_array(files, file_count);
+    qsort(list->files, list->count, sizeof(FileMetadata),
+          options->sort_by_time ? compare_by_time : compare_by_path);
 
-    int max_link = 0, max_size = 0, max_blocks = 0;
-    for (int i = 0; i < file_count; i++) {
-        if (files[i].nlink > max_link) max_link = files[i].nlink;
-        if (files[i].size > max_size) max_size = files[i].size;
-        if (files[i].blocks > max_blocks) max_blocks = files[i].blocks;
+    if (options->reverse_sort) {
+        reverse_array(list->files, list->count);
     }
 
-    int max_link_len = snprintf(NULL, 0, "%d", max_link);
-    int max_size_len = snprintf(NULL, 0, "%d", max_size);
-    int max_blocks_len = snprintf(NULL, 0, "%d", max_blocks);
+    update_display_options(list, options);
 
-    for (int i = 0; i < file_count; i++) {
-        print_file_info(&files[i], show_inode, show_blocks, long_format, max_link_len, max_size_len, max_blocks_len);
+    if (options->recursive) {
+        printf("\n%s:\n", dir_path);
     }
 
-    if (!long_format) printf("\n");
-
-    int dir_count = 0;
-    for (int i = 0; i < file_count; i++) {
-        if (S_ISDIR(files[i].mode) && strcmp(files[i].name, ".") != 0 && strcmp(files[i].name, "..") != 0) dir_count++;
+    for (int i = 0; i < list->count; i++) {
+        display_file_entry(&list->files[i], options);
     }
+    if (!options->long_format) printf("\n");
 
-    char **dir_names = malloc(dir_count * sizeof(char *));
-    for (int i = 0, j = 0; i < file_count; i++) {
-        if (S_ISDIR(files[i].mode) && strcmp(files[i].name, ".") != 0 && strcmp(files[i].name, "..") != 0) {
-            dir_names[j] = malloc(MAX_NAME_LEN);
-            strcpy(dir_names[j++], files[i].name);
+    if (options->recursive) {
+        for (int i = 0; i < list->count; i++) {
+            if (S_ISDIR(list->files[i].file_mode) &&
+                strcmp(list->files[i].path, ".") != 0 &&
+                strcmp(list->files[i].path, "..") != 0) {
+                char new_path[MAX_PATH_LENGTH];
+                snprintf(new_path, sizeof(new_path), "%s/%s", 
+                        dir_path, list->files[i].path);
+                list_directory(new_path, options);
+            }
         }
     }
 
-    free(files);
-
-    if (recursive) {
-        for (int i = 0; i < dir_count; i++) {
-            char new_dir_path[1024];
-            snprintf(new_dir_path, sizeof(new_dir_path), "%s/%s", dir_path, dir_names[i]);
-            list_directory(new_dir_path, show_hidden, long_format, recursive, sort_by_time, reverse_order, show_inode, show_blocks);
-        }
-    }
-
-    free(dir_names);
+    free_file_list(list);
     closedir(dir);
 }
 
+// 主函数
 int main(int argc, char *argv[]) {
     int opt;
-    bool show_hidden = false, long_format = false, recursive = false, sort_by_time = false, reverse_order = false, show_inode = false, show_blocks = false;
-    char *path = ".";
+    DisplayOptions options = {0};
 
     while ((opt = getopt(argc, argv, "alRtris")) != -1) {
         switch (opt) {
-            case 'a': show_hidden = true; break;
-            case 'l': long_format = true; break;
-            case 'R': recursive = true; break;
-            case 't': sort_by_time = true; break;
-            case 'r': reverse_order = true; break;
-            case 'i': show_inode = true; break;
-            case 's': show_blocks = true; break;
-            default: fprintf(stderr, "Usage: %s [-alRtris] [directory...]\n", argv[0]); exit(EXIT_FAILURE);
+            case 'a': 
+                options.show_hidden = true; 
+                break;
+                
+            case 'l': 
+                options.long_format = true; 
+                break;
+                
+            case 'R': 
+                options.recursive = true; 
+                break;
+                
+            case 't': 
+                options.sort_by_time = true; 
+                break;
+                
+            case 'r': 
+                options.reverse_sort = true; 
+                break;
+                
+            case 'i': 
+                options.show_inode = true; 
+                break;
+                
+            case 's': 
+                options.show_blocks = true; 
+                break;
+                
+            case '?':
+                fprintf(stderr, "Unknown option: %c\n", optopt);
+                fprintf(stderr, "Usage: %s [-alRtris] [directory...]\n", argv[0]);
+                exit(EXIT_FAILURE);
+                
+            default: 
+                fprintf(stderr, "Usage: %s [-alRtris] [directory...]\n", argv[0]);
+                fprintf(stderr, "Options:\n");
+                fprintf(stderr, "  -a: show hidden files\n");
+                fprintf(stderr, "  -l: use long listing format\n");
+                fprintf(stderr, "  -R: list subdirectories recursively\n");
+                fprintf(stderr, "  -t: sort by modification time\n");
+                fprintf(stderr, "  -r: reverse order while sorting\n");
+                fprintf(stderr, "  -i: print the index number of each file\n");
+                fprintf(stderr, "  -s: print the allocated size of each file\n");
+                exit(EXIT_FAILURE);
         }
     }
 
-    if (optind < argc) {
-        path = argv[optind];
-        if (!recursive) printf("%s:\n", path);
-    }
-
-    list_directory(path, show_hidden, long_format, recursive, sort_by_time, reverse_order, show_inode, show_blocks);
+    const char *path = optind < argc ? argv[optind] : ".";
+    list_directory(path, &options);
 
     return 0;
 }

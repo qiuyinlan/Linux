@@ -1,0 +1,263 @@
+2025-02-06 13:28:28,447 - INFO - 开始获取扇贝文章...
+2025-02-06 13:28:28,447 - INFO - 尝试请求URL: https://web.shanbay.com/api/v1/read/article/today
+2025-02-06 13:28:28,447 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/web/read/article",
+  "Origin": "https://web.shanbay.com",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmb=183787513.1.10.1738818459; _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12"
+}
+2025-02-06 13:28:28,448 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 13:28:28,727 - DEBUG - https://web.shanbay.com:443 "GET /api/v1/read/article/today HTTP/1.1" 404 0
+2025-02-06 13:28:28,728 - INFO - 状态码: 404
+2025-02-06 13:28:28,728 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 05:28:28 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 13:28:28,728 - WARNING - 请求失败: HTTP 404
+2025-02-06 13:28:28,729 - DEBUG - 错误响应: ...
+2025-02-06 13:28:28,729 - INFO - 尝试请求URL: https://web.shanbay.com/api/v2/read/today
+2025-02-06 13:28:28,729 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/web/read/article",
+  "Origin": "https://web.shanbay.com",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmb=183787513.1.10.1738818459; _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12"
+}
+2025-02-06 13:28:28,730 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 13:28:28,947 - DEBUG - https://web.shanbay.com:443 "GET /api/v2/read/today HTTP/1.1" 404 0
+2025-02-06 13:28:28,948 - INFO - 状态码: 404
+2025-02-06 13:28:28,948 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 05:28:28 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 13:28:28,948 - WARNING - 请求失败: HTTP 404
+2025-02-06 13:28:28,948 - DEBUG - 错误响应: ...
+2025-02-06 13:28:28,948 - INFO - 尝试请求URL: https://web.shanbay.com/api/v1/reading/article/today
+2025-02-06 13:28:28,948 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/web/read/article",
+  "Origin": "https://web.shanbay.com",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmb=183787513.1.10.1738818459; _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12"
+}
+2025-02-06 13:28:28,949 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 13:28:29,168 - DEBUG - https://web.shanbay.com:443 "GET /api/v1/reading/article/today HTTP/1.1" 404 0
+2025-02-06 13:28:29,168 - INFO - 状态码: 404
+2025-02-06 13:28:29,169 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 05:28:29 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 13:28:29,169 - WARNING - 请求失败: HTTP 404
+2025-02-06 13:28:29,169 - DEBUG - 错误响应: ...
+2025-02-06 13:28:29,169 - ERROR - 所有API地址均请求失败
+2025-02-06 13:28:29,169 - INFO - 从扇贝获取文章失败，等待手动输入...
+2025-02-06 13:29:18,490 - INFO - 开始获取扇贝文章...
+2025-02-06 13:29:18,491 - INFO - 尝试请求URL: https://web.shanbay.com/api/v2/reading/article/today
+2025-02-06 13:29:18,491 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/reader",
+  "Origin": "https://web.shanbay.com",
+  "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": "\"Linux\"",
+  "Sec-Fetch-Dest": "empty",
+  "Sec-Fetch-Mode": "cors",
+  "Sec-Fetch-Site": "same-origin",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmb=183787513.1.10.1738818459; _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12"
+}
+2025-02-06 13:29:18,492 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 13:29:18,694 - DEBUG - https://web.shanbay.com:443 "GET /api/v2/reading/article/today HTTP/1.1" 404 0
+2025-02-06 13:29:18,695 - INFO - 状态码: 404
+2025-02-06 13:29:18,695 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 05:29:18 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 13:29:18,696 - WARNING - 请求失败: HTTP 404
+2025-02-06 13:29:18,696 - DEBUG - 错误响应: ...
+2025-02-06 13:29:18,696 - INFO - 尝试请求URL: https://web.shanbay.com/api/v2/reading/articles/today
+2025-02-06 13:29:18,696 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/reader",
+  "Origin": "https://web.shanbay.com",
+  "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": "\"Linux\"",
+  "Sec-Fetch-Dest": "empty",
+  "Sec-Fetch-Mode": "cors",
+  "Sec-Fetch-Site": "same-origin",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmb=183787513.1.10.1738818459; _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12"
+}
+2025-02-06 13:29:18,697 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 13:29:18,889 - DEBUG - https://web.shanbay.com:443 "GET /api/v2/reading/articles/today HTTP/1.1" 404 0
+2025-02-06 13:29:18,890 - INFO - 状态码: 404
+2025-02-06 13:29:18,890 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 05:29:18 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 13:29:18,890 - WARNING - 请求失败: HTTP 404
+2025-02-06 13:29:18,890 - DEBUG - 错误响应: ...
+2025-02-06 13:29:18,890 - INFO - 尝试请求URL: https://web.shanbay.com/api/v2/reading/daily_article
+2025-02-06 13:29:18,890 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/reader",
+  "Origin": "https://web.shanbay.com",
+  "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": "\"Linux\"",
+  "Sec-Fetch-Dest": "empty",
+  "Sec-Fetch-Mode": "cors",
+  "Sec-Fetch-Site": "same-origin",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmb=183787513.1.10.1738818459; _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12"
+}
+2025-02-06 13:29:18,891 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 13:29:19,136 - DEBUG - https://web.shanbay.com:443 "GET /api/v2/reading/daily_article HTTP/1.1" 404 0
+2025-02-06 13:29:19,136 - INFO - 状态码: 404
+2025-02-06 13:29:19,136 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 05:29:19 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 13:29:19,137 - WARNING - 请求失败: HTTP 404
+2025-02-06 13:29:19,137 - DEBUG - 错误响应: ...
+2025-02-06 13:29:19,137 - ERROR - 所有API地址均请求失败
+2025-02-06 13:29:19,137 - INFO - 从扇贝获取文章失败，等待手动输入...
+2025-02-06 13:30:08,166 - INFO - 开始获取扇贝文章...
+2025-02-06 13:30:08,166 - INFO - 尝试请求URL: https://web.shanbay.com/api/v2/reader/news_articles/today
+2025-02-06 13:30:08,166 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+  "Accept": "application/json, text/plain, */*",
+  "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/reader",
+  "Origin": "https://web.shanbay.com",
+  "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": "\"Linux\"",
+  "Sec-Fetch-Dest": "empty",
+  "Sec-Fetch-Mode": "cors",
+  "Sec-Fetch-Site": "same-origin",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); __utmb=183787513.1.10.1738818459; _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12"
+}
+2025-02-06 13:30:08,168 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 13:30:08,313 - DEBUG - https://web.shanbay.com:443 "GET /api/v2/reader/news_articles/today HTTP/1.1" 404 0
+2025-02-06 13:30:08,313 - INFO - 状态码: 404
+2025-02-06 13:30:08,313 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 05:30:08 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 13:30:08,313 - WARNING - 请求失败: HTTP 404
+2025-02-06 13:30:08,314 - DEBUG - 错误响应: ...
+2025-02-06 13:30:08,314 - INFO - 从扇贝获取文章失败，等待手动输入...
+2025-02-06 14:19:42,514 - INFO - 开始获取扇贝文章...
+2025-02-06 14:19:42,514 - INFO - 尝试请求URL: https://www.shanbay.com/api/v2/news/articles/today
+2025-02-06 14:19:42,514 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+  "Accept": "*/*",
+  "Accept-Language": "zh-CN,zh;q=0.9",
+  "Accept-Encoding": "gzip, deflate, br, zstd",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/reader",
+  "Origin": "https://web.shanbay.com",
+  "Host": "www.shanbay.com",
+  "Content-Type": "application/json",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12; userid=228703601"
+}
+2025-02-06 14:19:42,516 - DEBUG - Starting new HTTPS connection (1): www.shanbay.com:443
+2025-02-06 14:19:42,653 - DEBUG - https://www.shanbay.com:443 "GET /api/v2/news/articles/today HTTP/1.1" 404 100
+2025-02-06 14:19:42,653 - INFO - 状态码: 404
+2025-02-06 14:19:42,654 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 06:19:42 GMT",
+  "Content-Type": "text/html",
+  "Content-Length": "100",
+  "Connection": "keep-alive",
+  "x-frame-options": "SAMEORIGIN",
+  "vary": "Accept-Language, Cookie",
+  "content-language": "zh-cn",
+  "x-envoy-upstream-service-time": "10",
+  "access-control-allow-origin": "https://web.shanbay.com",
+  "access-control-allow-credentials": "true"
+}
+2025-02-06 14:19:42,654 - WARNING - 请求失败: HTTP 404
+2025-02-06 14:19:42,654 - DEBUG - 错误响应: <h1>Not Found</h1><p>The requested URL /api/v2/news/articles/today was not found on this server.</p>...
+2025-02-06 14:19:42,654 - INFO - 从扇贝获取文章失败，等待手动输入...
+2025-02-06 14:20:49,284 - INFO - 开始获取扇贝文章...
+2025-02-06 14:20:49,284 - INFO - 尝试请求URL: https://web.shanbay.com/api/v2/reading/articles/today
+2025-02-06 14:20:49,285 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+  "Accept": "*/*",
+  "Accept-Language": "zh-CN,zh;q=0.9",
+  "Accept-Encoding": "gzip, deflate, br, zstd",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/reader",
+  "Origin": "https://web.shanbay.com",
+  "Host": "web.shanbay.com",
+  "Content-Type": "application/json",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12; userid=228703601"
+}
+2025-02-06 14:20:49,286 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 14:20:49,424 - DEBUG - https://web.shanbay.com:443 "GET /api/v2/reading/articles/today HTTP/1.1" 404 0
+2025-02-06 14:20:49,424 - INFO - 状态码: 404
+2025-02-06 14:20:49,424 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 06:20:49 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 14:20:49,424 - WARNING - 请求失败: HTTP 404
+2025-02-06 14:20:49,424 - DEBUG - 错误响应: ...
+2025-02-06 14:20:49,425 - INFO - 从扇贝获取文章失败，等待手动输入...
+2025-02-06 14:21:39,524 - INFO - 开始获取扇贝文章...
+2025-02-06 14:21:39,524 - INFO - 尝试请求URL: https://web.shanbay.com/api/v2/read/article/today
+2025-02-06 14:21:39,524 - DEBUG - 请求头: {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+  "Accept": "*/*",
+  "Accept-Language": "zh-CN,zh;q=0.9",
+  "Accept-Encoding": "gzip, deflate, br, zstd",
+  "Connection": "keep-alive",
+  "Referer": "https://web.shanbay.com/reader",
+  "Origin": "https://web.shanbay.com",
+  "Host": "web.shanbay.com",
+  "Content-Type": "application/json",
+  "Cookie": "sajssdk_2015_cross_new_user=1; __utma=183787513.1580934721.1738818459.1738818459.1738818459.1; __utmc=183787513; __utmz=183787513.1738818459.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); _ga=GA1.2.1580934721.1738818459; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjI4NzAzNjAxLCJleHAiOjE3NDE0MTA1MjgsImV4cF92MiI6MTc0MTQxMDUyOCwiZGV2aWNlIjoiIiwidXNlcm5hbWUiOiJQaG9uZV9hMzc0M2M4ODBhMmRjMDJiIiwiaXNfc3RhZmYiOjAsInNlc3Npb25faWQiOiI3MjgxYTczY2U0NDgxMWVmYWFmNjNhYTU0NzY2MTZkMiJ9.8bY_iP469NhC_rzdV9SrOo-IsgZAvc6jG6uyvq_3yPU; csrftoken=7636a05e2c1897b15b584e4b13d4fe12; userid=228703601"
+}
+2025-02-06 14:21:39,525 - DEBUG - Starting new HTTPS connection (1): web.shanbay.com:443
+2025-02-06 14:21:39,636 - DEBUG - https://web.shanbay.com:443 "GET /api/v2/read/article/today HTTP/1.1" 404 0
+2025-02-06 14:21:39,636 - INFO - 状态码: 404
+2025-02-06 14:21:39,637 - DEBUG - 响应头: {
+  "Date": "Thu, 06 Feb 2025 06:21:39 GMT",
+  "Content-Length": "0",
+  "Connection": "keep-alive",
+  "vary": "Accept-Encoding"
+}
+2025-02-06 14:21:39,637 - WARNING - 请求失败: HTTP 404
+2025-02-06 14:21:39,637 - DEBUG - 错误响应: ...
+2025-02-06 14:21:39,637 - INFO - 从扇贝获取文章失败，等待手动输入...
